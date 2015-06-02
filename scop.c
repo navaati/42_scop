@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/31 17:10:30 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/05/31 17:47:43 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/04 00:40:54 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 #include <stdio.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <math.h>
 
+#include "geom.h"
 #include "scop.h"
 
 #include "vertex_shader.h"
@@ -79,13 +81,21 @@ int						setup_gl_objects(GLuint *program_id)
 	return (0);
 }
 
-int						draw(GLuint program_id)
+int						draw(GLuint program_id, int win_w, int win_h)
 {
-	t_transform_mat	pv_mat;
-	GLuint			pv_mat_uniform_id;
+	t_transform	view_mat;
+	GLfloat		aspect;
+	t_transform	proj_mat;
+	t_transform	pv_mat;
+	GLuint		pv_mat_uniform_id;
 
+	view_mat = compose_transform(translation(0.5, 0, 0),
+									rotation_z(0.5f));
+	aspect = (GLfloat)win_w / (GLfloat)win_h;
+	proj_mat = win_w < win_h ? homothety_y(aspect) : homothety_x(1 / aspect);
+	pv_mat = compose_transform(proj_mat, view_mat);
 	pv_mat_uniform_id = glGetUniformLocation(program_id, "pv_mat");
-	glUniformMatrix4fv(pv_mat_uniform_id, 1, GL_FALSE, &pv_mat[0][0]);
+	glUniformMatrix4fv(pv_mat_uniform_id, 1, GL_FALSE, to_array(&pv_mat));
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	return (0);
 }
@@ -94,6 +104,8 @@ int						main(void)
 {
 	GLFWwindow	*window;
 	GLuint		program_id;
+	int			win_w;
+	int			win_h;
 
 	if (!(window = make_context_and_window()))
 	{
@@ -103,7 +115,8 @@ int						main(void)
 	while (glfwWindowShouldClose(window) == 0)
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		draw(program_id);
+		glfwGetWindowSize(window, &win_w, &win_h);
+		draw(program_id, win_w, win_h);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}

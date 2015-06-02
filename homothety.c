@@ -1,23 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vertex_shader.h                                    :+:      :+:    :+:   */
+/*   homothety.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/05/31 15:14:47 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/01 20:18:45 by lgillot-         ###   ########.fr       */
+/*   Created: 2015/06/04 00:42:37 by lgillot-          #+#    #+#             */
+/*   Updated: 2015/06/04 00:43:54 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef VERTEX_SHADER_H
-# define VERTEX_SHADER_H
+#include <GL/glew.h>
 
-const char	*g_vertex_shader = "#version 410 core\n"
-"in vec2 point;\n"
-"uniform mat4 pv_mat = mat4(1.0);\n"
-"void main() {\n"
-"	gl_Position = pv_mat * vec4(point.x, point.y, 0, 1);\n"
-"}\n";
+#include "geom.h"
 
-#endif
+t_transform	homothety_x(GLfloat factor)
+{
+	t_transform	hom;
+
+	hom = g_identity;
+	hom.mat[0][0] = factor;
+	return (hom);
+}
+
+t_transform	homothety_y(GLfloat factor)
+{
+	t_transform	hom;
+
+	hom = g_identity;
+	hom.mat[1][1] = factor;
+	return (hom);
+}
+
+t_transform	homothety_z(GLfloat factor)
+{
+	t_transform	hom;
+
+	hom = g_identity;
+	hom.mat[2][2] = factor;
+	return (hom);
+}

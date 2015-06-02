@@ -2,12 +2,12 @@ PKGS = glew glfw3
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror $(shell pkg-config --cflags $(PKGS))
-LDFLAGS = $(shell pkg-config --libs $(PKGS)) -framework OpenGL
+LDFLAGS = $(shell pkg-config --libs $(PKGS)) -framework OpenGL -lm
 
 CFLAGS += -g -O0
 
 NAME = scop
-OBJS = scop.o load_shaders.o
+OBJS = scop.o load_shaders.o geom.o rotation.o homothety.o
 
 all: $(NAME)
 
