@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/31 15:14:47 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/01 20:18:45 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/08 14:35:34 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 const char	*g_vertex_shader = "#version 410 core\n"
 "in vec2 point;\n"
-"uniform mat4 pv_mat = mat4(1.0);\n"
+"uniform mat4 pvm_mat;\n"
 "void main() {\n"
-"	gl_Position = pv_mat * vec4(point.x, point.y, 0, 1);\n"
+"	gl_Position = pvm_mat * vec4(point.x, point.y, 0, 1);\n"
 "}\n";
 
 #endif

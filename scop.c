@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/31 17:10:30 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/08 13:46:59 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/08 14:32:42 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ int					main(void)
 	while (glfwWindowShouldClose(window) == 0)
 	{
 		glfwPollEvents();
+		ctx.time = glfwGetTime();
 		window_refresh_callback(window);
 	}
 	return (EXIT_SUCCESS);

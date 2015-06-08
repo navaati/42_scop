@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 12:14:00 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/08 13:49:38 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/08 14:28:59 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,27 +43,40 @@ int						setup_gl_objects(t_scop_context *ctx)
 	glEnableVertexAttribArray(point_attr_loc);
 	glVertexAttribPointer(point_attr_loc, 2, GL_FLOAT,
 							GL_FALSE, 0, (void *)0);
-	ctx->pv_mat_uniform_id = glGetUniformLocation(program_id, "pv_mat");
+	ctx->pvm_mat_uniform_id = glGetUniformLocation(program_id, "pvm_mat");
 	glUseProgram(program_id);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	return (0);
 }
 
+static t_transform		viewport_transform(const t_scop_context *ctx)
+{
+	GLfloat		aspect;
+	t_transform	transform;
+
+	aspect = (GLfloat)ctx->win_w / (GLfloat)ctx->win_h;
+	transform = ctx->win_w < ctx->win_h ?
+		homothety_y(aspect) : homothety_x(1 / aspect);
+	return (transform);
+}
+
 int						draw(const t_scop_context *ctx)
 {
+	t_transform	model_mat;
 	t_transform	view_mat;
-	GLfloat		aspect;
 	t_transform	proj_mat;
-	t_transform	pv_mat;
+	t_transform	pvm_mat;
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	model_mat = rotation_y((GLfloat)ctx->time);
 	view_mat = compose_transform(translation(0.5, 0, 0),
 									rotation_z(0.5f));
-	aspect = (GLfloat)ctx->win_w / (GLfloat)ctx->win_h;
-	proj_mat = ctx->win_w < ctx->win_h ?
-		homothety_y(aspect) : homothety_x(1 / aspect);
-	pv_mat = compose_transform(proj_mat, view_mat);
-	glUniformMatrix4fv(ctx->pv_mat_uniform_id, 1, GL_FALSE, to_array(&pv_mat));
+	proj_mat = viewport_transform(ctx);
+	pvm_mat = compose_transform(proj_mat,
+							compose_transform(view_mat,
+								model_mat));
+	glUniformMatrix4fv(ctx->pvm_mat_uniform_id, 1, GL_FALSE,
+					to_array(&pvm_mat));
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 	return (0);
 }
