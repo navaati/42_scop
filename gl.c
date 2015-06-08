@@ -6,10 +6,11 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 12:14:00 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 01:52:16 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 01:52:53 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdint.h>
 #include <GL/glew.h>
 #include <math.h>
 
@@ -19,10 +20,24 @@
 #include "vertex_shader.h"
 #include "fragment_shader.h"
 
-static const GLfloat	g_triangle[] = {
-	-1.0f, -1.0f,
-	1.0f, -1.0f,
-	0.0f, 1.0f,
+static const t_point	g_cube[] = {
+	{ 1.0f, 1.0f, 1.0f },
+	{ 1.0f, 1.0f, -1.0f },
+	{ -1.0f, 1.0f, -1.0f },
+	{ -1.0f, 1.0f, 1.0f },
+	{ 1.0f, -1.0f, 1.0f },
+	{ 1.0f, -1.0f, -1.0f },
+	{ -1.0f, -1.0f, -1.0f },
+	{ -1.0f, -1.0f, 1.0f },
+};
+
+static const GLushort	g_cube_ix[] = {
+	0, 1, 2, 2, 3, 0,
+	0, 3, 7, 7, 4, 0,
+	0, 4, 5, 5, 0, 1,
+	1, 5, 6, 6, 1, 2,
+	2, 6, 3, 3, 6, 7,
+	7, 4, 6, 6, 4, 5
 };
 
 int						setup_gl_objects(t_scop_context *ctx)
@@ -31,17 +46,22 @@ int						setup_gl_objects(t_scop_context *ctx)
 	GLuint vao_id;
 	GLuint point_attr_loc;
 	GLuint vbo_id;
+	GLuint ixbo_id;
 
 	program_id = link_program(g_vertex_shader, g_fragment_shader);
-	point_attr_loc = glGetAttribLocation(program_id, "point");
 	glGenVertexArrays(1, &vao_id);
 	glBindVertexArray(vao_id);
 	glGenBuffers(1, &vbo_id);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_triangle), g_triangle,
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_cube), g_cube,
 					GL_STATIC_DRAW);
+	glGenBuffers(1, &ixbo_id);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ixbo_id);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(g_cube_ix), g_cube_ix,
+					GL_STATIC_DRAW);
+	point_attr_loc = glGetAttribLocation(program_id, "point");
 	glEnableVertexAttribArray(point_attr_loc);
-	glVertexAttribPointer(point_attr_loc, 2, GL_FLOAT,
+	glVertexAttribPointer(point_attr_loc, 3, GL_FLOAT,
 							GL_FALSE, 0, (void *)0);
 	ctx->pvm_mat_uniform_id = glGetUniformLocation(program_id, "pvm_mat");
 	glUseProgram(program_id);
@@ -81,6 +101,7 @@ int						draw(const t_scop_context *ctx)
 	pvm_mat = compose_transform(proj_view_mat(ctx), model_mat);
 	glUniformMatrix4fv(ctx->pvm_mat_uniform_id, 1, GL_FALSE,
 					to_array(&pvm_mat));
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDrawElements(GL_TRIANGLES, sizeof(g_cube_ix) / sizeof(*g_cube_ix),
+					GL_UNSIGNED_SHORT, (void*)0);
 	return (0);
 }

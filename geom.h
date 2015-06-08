@@ -15,6 +15,8 @@
 
 # include <GL/glew.h>
 
+typedef GLfloat	t_point[3];
+
 typedef struct	s_transform
 {
 	GLfloat	mat[4][4];
