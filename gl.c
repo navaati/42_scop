@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 12:14:00 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/08 14:28:59 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 01:52:16 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,21 +60,25 @@ static t_transform		viewport_transform(const t_scop_context *ctx)
 	return (transform);
 }
 
+static t_transform		proj_view_mat(const t_scop_context *ctx)
+{
+	t_transform	view_mat;
+	t_transform	proj_mat;
+
+	view_mat = translation(-4.0f, -3.0f, -8.0f);
+	view_mat = compose_transform(rotation_y(-M_PI_4), view_mat);
+	proj_mat = compose_transform(viewport_transform(ctx), basic_persp());
+	return (compose_transform(proj_mat, view_mat));
+}
+
 int						draw(const t_scop_context *ctx)
 {
 	t_transform	model_mat;
-	t_transform	view_mat;
-	t_transform	proj_mat;
 	t_transform	pvm_mat;
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	model_mat = rotation_y((GLfloat)ctx->time);
-	view_mat = compose_transform(translation(0.5, 0, 0),
-									rotation_z(0.5f));
-	proj_mat = viewport_transform(ctx);
-	pvm_mat = compose_transform(proj_mat,
-							compose_transform(view_mat,
-								model_mat));
+	pvm_mat = compose_transform(proj_view_mat(ctx), model_mat);
 	glUniformMatrix4fv(ctx->pvm_mat_uniform_id, 1, GL_FALSE,
 					to_array(&pvm_mat));
 	glDrawArrays(GL_TRIANGLES, 0, 3);

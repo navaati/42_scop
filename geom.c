@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/01 19:57:34 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/04 00:43:59 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/08 13:45:32 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,18 @@ t_transform	translation(GLfloat x, GLfloat y, GLfloat z)
 	trans.mat[3][1] = y;
 	trans.mat[3][2] = z;
 	return (trans);
+}
+
+t_transform	basic_persp(void)
+{
+	t_transform	persp;
+
+	persp = g_identity;
+	persp.mat[3][3] = 0.0f;
+	persp.mat[2][2] = -1.0f;
+	persp.mat[2][3] = -1.0f;
+	persp.mat[3][2] = -2.0f;
+	return (persp);
 }
 
 GLfloat		*to_array(t_transform *transf)

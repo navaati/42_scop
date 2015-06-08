@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/01 18:36:43 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/01 20:26:40 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/08 17:24:44 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ t_transform		rotation_z(GLfloat angle);
 t_transform		homothety_x(GLfloat factor);
 t_transform		homothety_y(GLfloat factor);
 t_transform		homothety_z(GLfloat factor);
+t_transform		basic_persp();
 GLfloat			*to_array(t_transform *transf);
 
 #endif
