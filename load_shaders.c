@@ -6,13 +6,15 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/31 11:02:41 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/05/31 17:08:48 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 02:41:50 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <GL/glew.h>
+
+#include "scop.h"
 
 static void	print_error(GLuint id,
 						void (*get_log_len)(GLuint, GLenum, GLint *),
@@ -43,23 +45,19 @@ GLuint		compile_shader(const char *shader_code, GLenum type)
 	return (shader_id);
 }
 
-GLuint		link_program(const char *vertex_shader, const char *fragment_shader)
+GLuint		link_program(const GLuint vertex_shader_id,
+							const GLuint fragment_shader_id)
 {
-	GLuint	vertex_shader_id;
-	GLint	fragment_shader_id;
 	GLuint	program_id;
 	GLint	status;
 
-	vertex_shader_id = compile_shader(vertex_shader, GL_VERTEX_SHADER);
-	fragment_shader_id = compile_shader(fragment_shader, GL_FRAGMENT_SHADER);
 	program_id = glCreateProgram();
 	glAttachShader(program_id, vertex_shader_id);
 	glAttachShader(program_id, fragment_shader_id);
+	glBindAttribLocation(program_id, POS_ATTR_LOCATION, "pos");
 	glLinkProgram(program_id);
 	glGetProgramiv(program_id, GL_LINK_STATUS, &status);
 	if (status == GL_FALSE)
 		print_error(program_id, glGetProgramiv, glGetProgramInfoLog);
-	glDeleteShader(vertex_shader_id);
-	glDeleteShader(fragment_shader_id);
 	return (program_id);
 }

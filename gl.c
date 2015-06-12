@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 12:14:00 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 01:52:53 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 02:40:15 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,15 +40,12 @@ static const GLushort	g_cube_ix[] = {
 	7, 4, 6, 6, 4, 5
 };
 
-int						setup_gl_objects(t_scop_context *ctx)
+static GLuint			create_cube_vao(void)
 {
-	GLuint program_id;
 	GLuint vao_id;
-	GLuint point_attr_loc;
 	GLuint vbo_id;
 	GLuint ixbo_id;
 
-	program_id = link_program(g_vertex_shader, g_fragment_shader);
 	glGenVertexArrays(1, &vao_id);
 	glBindVertexArray(vao_id);
 	glGenBuffers(1, &vbo_id);
@@ -59,10 +56,24 @@ int						setup_gl_objects(t_scop_context *ctx)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ixbo_id);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(g_cube_ix), g_cube_ix,
 					GL_STATIC_DRAW);
-	point_attr_loc = glGetAttribLocation(program_id, "point");
-	glEnableVertexAttribArray(point_attr_loc);
-	glVertexAttribPointer(point_attr_loc, 3, GL_FLOAT,
+	glEnableVertexAttribArray(POS_ATTR_LOCATION);
+	glVertexAttribPointer(POS_ATTR_LOCATION, 3, GL_FLOAT,
 							GL_FALSE, 0, (void *)0);
+	return (vao_id);
+}
+
+int						setup_gl_objects(t_scop_context *ctx)
+{
+	GLuint	vertex_shader_id;
+	GLuint	fragment_shader_id;
+	GLuint	program_id;
+
+	vertex_shader_id = compile_shader(g_vertex_shader, GL_VERTEX_SHADER);
+	fragment_shader_id = compile_shader(g_fragment_shader, GL_FRAGMENT_SHADER);
+	program_id = link_program(vertex_shader_id, fragment_shader_id);
+	glDeleteShader(vertex_shader_id);
+	glDeleteShader(fragment_shader_id);
+	create_cube_vao();
 	ctx->pvm_mat_uniform_id = glGetUniformLocation(program_id, "pvm_mat");
 	glUseProgram(program_id);
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);

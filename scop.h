@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/31 17:10:48 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/08 14:27:26 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 02:41:43 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 # include <GL/glew.h>
 # include <stdint.h>
 
+# define POS_ATTR_LOCATION (0)
+
 typedef struct	s_scop_context
 {
 	GLuint		pvm_mat_uniform_id;
@@ -24,8 +26,9 @@ typedef struct	s_scop_context
 	double		time;
 }				t_scop_context;
 
-GLuint			link_program(const char *vertex_shader,
-							const char *fragment_shader);
+GLuint			compile_shader(const char *shader_code, GLenum type);
+GLuint			link_program(const GLuint vertex_shader_id,
+							const GLuint fragment_shader_id);
 int				setup_gl_objects(t_scop_context *ctx);
 int				draw(const t_scop_context *ctx);
 
