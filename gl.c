@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 12:14:00 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 03:57:59 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 04:03:22 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,18 +62,24 @@ static GLuint			create_cube_vao(void)
 int						setup_gl_objects(t_scop_context *ctx)
 {
 	GLuint	vertex_shader_id;
+	GLuint	geom_shader_id;
 	GLuint	fragment_shader_id;
 	GLuint	program_id;
 
 	vertex_shader_id = compile_shader("vertex.glsl", GL_VERTEX_SHADER);
+	geom_shader_id = compile_shader("geom.glsl", GL_GEOMETRY_SHADER);
 	fragment_shader_id = compile_shader("fragment.glsl", GL_FRAGMENT_SHADER);
-	program_id = link_program(vertex_shader_id, fragment_shader_id);
+	program_id = link_program(vertex_shader_id,
+								geom_shader_id,
+								fragment_shader_id);
 	glDeleteShader(vertex_shader_id);
+	glDeleteShader(geom_shader_id);
 	glDeleteShader(fragment_shader_id);
 	create_cube_vao();
 	ctx->pvm_mat_uniform_id = glGetUniformLocation(program_id, "pvm_mat");
 	glUseProgram(program_id);
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glEnable(GL_DEPTH_TEST);
+	glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
 	return (0);
 }
 

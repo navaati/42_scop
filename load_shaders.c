@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/31 11:02:41 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 03:58:31 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 04:01:13 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,15 +74,20 @@ GLuint		compile_shader(const char *filename, GLenum type)
 	return (shader_id);
 }
 
-GLuint		link_program(const GLuint vertex_shader_id,
-							const GLuint fragment_shader_id)
+GLuint		link_program(const GLint vertex_shader_id,
+							const GLint geom_shader_id,
+							const GLint fragment_shader_id)
 {
 	GLuint	program_id;
 	GLint	status;
 
 	program_id = glCreateProgram();
-	glAttachShader(program_id, vertex_shader_id);
-	glAttachShader(program_id, fragment_shader_id);
+	if (vertex_shader_id != -1)
+		glAttachShader(program_id, vertex_shader_id);
+	if (geom_shader_id != -1)
+		glAttachShader(program_id, geom_shader_id);
+	if (fragment_shader_id != -1)
+		glAttachShader(program_id, fragment_shader_id);
 	glBindAttribLocation(program_id, POS_ATTR_LOCATION, "pos");
 	glLinkProgram(program_id);
 	glGetProgramiv(program_id, GL_LINK_STATUS, &status);
