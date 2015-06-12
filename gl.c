@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 12:14:00 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 04:03:22 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 07:21:20 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int						draw(const t_scop_context *ctx)
 	t_transform	pvm_mat;
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	model_mat = rotation_y((GLfloat)ctx->time);
+	model_mat = rotation_y(ctx->spin_angle);
 	pvm_mat = compose_transform(proj_view_mat(ctx), model_mat);
 	glUniformMatrix4fv(ctx->pvm_mat_uniform_id, 1, GL_FALSE,
 					to_array(&pvm_mat));

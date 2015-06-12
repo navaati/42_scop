@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/31 17:10:30 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/08 14:32:42 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 07:23:15 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,10 +61,27 @@ static void			resize_callback(GLFWwindow *window, int w, int h)
 static void			window_refresh_callback(GLFWwindow *window)
 {
 	t_scop_context	*ctx;
+	double			new_time;
 
 	ctx = (t_scop_context *)glfwGetWindowUserPointer(window);
+	new_time = glfwGetTime();
+	if (ctx->spin)
+		ctx->spin_angle += (GLfloat)(new_time - ctx->time);
 	draw(ctx);
 	glfwSwapBuffers(window);
+	ctx->time = new_time;
+}
+
+static void			key_callback(GLFWwindow *window, int key,
+									int scancode, int action, int mods)
+{
+	t_scop_context	*ctx;
+
+	(void)scancode;
+	(void)mods;
+	ctx = (t_scop_context *)glfwGetWindowUserPointer(window);
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+		ctx->spin = !ctx->spin;
 }
 
 int					main(void)
@@ -78,14 +95,16 @@ int					main(void)
 	}
 	ctx.win_w = WIN_W;
 	ctx.win_h = WIN_H;
+	ctx.spin_angle = 0.0f;
+	ctx.spin = true;
 	setup_gl_objects(&ctx);
 	glfwSetWindowUserPointer(window, &ctx);
 	glfwSetWindowSizeCallback(window, resize_callback);
 	glfwSetWindowRefreshCallback(window, window_refresh_callback);
+	glfwSetKeyCallback(window, key_callback);
 	while (glfwWindowShouldClose(window) == 0)
 	{
 		glfwPollEvents();
-		ctx.time = glfwGetTime();
 		window_refresh_callback(window);
 	}
 	return (EXIT_SUCCESS);
