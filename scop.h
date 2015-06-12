@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/31 17:10:48 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 11:27:10 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 11:52:44 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,16 +18,10 @@
 # include <stdbool.h>
 
 # include "engine.h"
+# include "camera.h"
 # include "cube.h"
 
 # define POS_ATTR_LOCATION (0)
-
-typedef struct	s_camera
-{
-	GLfloat		vert_angle;
-	GLfloat		horiz_angle;
-	GLfloat		distance;
-}				t_camera;
 
 typedef struct	s_scop_context
 {

@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 12:14:00 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 11:37:28 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 12:44:44 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,17 @@
 
 #include "scop.h"
 #include "geom.h"
+#include "camera.h"
 
 int					setup_gl_objects(t_scop_context *ctx)
 {
 	GLuint	vertex_shader_id;
 
 	vertex_shader_id = compile_shader("vertex.glsl", GL_VERTEX_SHADER);
+	init_camera(&ctx->cam);
 	ctx->dark_faces = make_dark_faces_mat(vertex_shader_id);
 	ctx->cube = make_cube();
 	ctx->cube.object.material = &ctx->dark_faces;
-	ctx->cam.vert_angle = -0.4f;
-	ctx->cam.horiz_angle = 0.0f;
-	ctx->cam.distance = 5.0f;
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
 	return (0);
