@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/31 17:10:48 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 02:41:43 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 03:18:50 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ typedef struct	s_scop_context
 	double		time;
 }				t_scop_context;
 
-GLuint			compile_shader(const char *shader_code, GLenum type);
+GLuint			compile_shader(const char *filename, GLenum type);
 GLuint			link_program(const GLuint vertex_shader_id,
 							const GLuint fragment_shader_id);
 int				setup_gl_objects(t_scop_context *ctx);

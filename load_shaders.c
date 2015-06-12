@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/31 11:02:41 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 02:41:50 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 03:58:31 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,32 @@
 #include <GL/glew.h>
 
 #include "scop.h"
+
+static char	*load_file(const char *filename)
+{
+	FILE	*stream;
+	long	size;
+	char	*buf;
+
+	if ((stream = fopen(filename, "rb")) == NULL)
+	{
+		perror(filename);
+		return (NULL);
+	}
+	fseek(stream, 0, SEEK_END);
+	size = ftell(stream);
+	rewind(stream);
+	if ((buf = malloc(size + 1)) == NULL)
+		return (NULL);
+	if (fread(buf, size, 1, stream) != 1)
+	{
+		free(buf);
+		return (NULL);
+	}
+	fclose(stream);
+	buf[size] = '\0';
+	return (buf);
+}
 
 static void	print_error(GLuint id,
 						void (*get_log_len)(GLuint, GLenum, GLint *),
@@ -31,13 +57,16 @@ static void	print_error(GLuint id,
 	}
 }
 
-GLuint		compile_shader(const char *shader_code, GLenum type)
+GLuint		compile_shader(const char *filename, GLenum type)
 {
+	char	*shader_source;
 	GLuint	shader_id;
 	GLint	status;
 
+	shader_source = load_file(filename);
 	shader_id = glCreateShader(type);
-	glShaderSource(shader_id, 1, &shader_code, NULL);
+	glShaderSource(shader_id, 1, (const GLchar *const *)&shader_source, NULL);
+	free(shader_source);
 	glCompileShader(shader_id);
 	glGetShaderiv(shader_id, GL_COMPILE_STATUS, &status);
 	if (status == GL_FALSE)

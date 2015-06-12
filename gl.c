@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 12:14:00 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 02:40:15 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 03:57:59 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,6 @@
 
 #include "geom.h"
 #include "scop.h"
-
-#include "vertex_shader.h"
-#include "fragment_shader.h"
 
 static const t_point	g_cube[] = {
 	{ 1.0f, 1.0f, 1.0f },
@@ -68,8 +65,8 @@ int						setup_gl_objects(t_scop_context *ctx)
 	GLuint	fragment_shader_id;
 	GLuint	program_id;
 
-	vertex_shader_id = compile_shader(g_vertex_shader, GL_VERTEX_SHADER);
-	fragment_shader_id = compile_shader(g_fragment_shader, GL_FRAGMENT_SHADER);
+	vertex_shader_id = compile_shader("vertex.glsl", GL_VERTEX_SHADER);
+	fragment_shader_id = compile_shader("fragment.glsl", GL_FRAGMENT_SHADER);
 	program_id = link_program(vertex_shader_id, fragment_shader_id);
 	glDeleteShader(vertex_shader_id);
 	glDeleteShader(fragment_shader_id);
