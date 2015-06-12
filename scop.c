@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/31 17:10:30 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 07:23:15 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 07:56:39 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <GLFW/glfw3.h>
 
 #include "scop.h"
+#include "inputs.h"
 
 #define WIN_W 1024
 #define WIN_H 768
@@ -72,16 +73,15 @@ static void			window_refresh_callback(GLFWwindow *window)
 	ctx->time = new_time;
 }
 
-static void			key_callback(GLFWwindow *window, int key,
-									int scancode, int action, int mods)
+static void			init_context(t_scop_context *ctx)
 {
-	t_scop_context	*ctx;
-
-	(void)scancode;
-	(void)mods;
-	ctx = (t_scop_context *)glfwGetWindowUserPointer(window);
-	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-		ctx->spin = !ctx->spin;
+	ctx->win_w = WIN_W;
+	ctx->win_h = WIN_H;
+	ctx->cam_vert_angle = -0.4f;
+	ctx->cam_horiz_angle = 0.0f;
+	ctx->cam_distance = 5.0f;
+	ctx->spin_angle = 0.0f;
+	ctx->spin = true;
 }
 
 int					main(void)
@@ -93,15 +93,13 @@ int					main(void)
 	{
 		return (EXIT_FAILURE);
 	}
-	ctx.win_w = WIN_W;
-	ctx.win_h = WIN_H;
-	ctx.spin_angle = 0.0f;
-	ctx.spin = true;
+	init_context(&ctx);
 	setup_gl_objects(&ctx);
 	glfwSetWindowUserPointer(window, &ctx);
 	glfwSetWindowSizeCallback(window, resize_callback);
 	glfwSetWindowRefreshCallback(window, window_refresh_callback);
 	glfwSetKeyCallback(window, key_callback);
+	glfwSetScrollCallback(window, scroll_callback);
 	while (glfwWindowShouldClose(window) == 0)
 	{
 		glfwPollEvents();

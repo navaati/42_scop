@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/31 17:10:48 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 07:22:07 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 07:33:16 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@ typedef struct	s_scop_context
 	GLuint		pvm_mat_uniform_id;
 	uint16_t	win_w;
 	uint16_t	win_h;
+	GLfloat		cam_vert_angle;
+	GLfloat		cam_horiz_angle;
+	GLfloat		cam_distance;
 	double		time;
 	GLfloat		spin_angle;
 	bool		spin;

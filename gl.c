@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 12:14:00 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 07:21:20 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 08:27:14 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,10 @@ static t_transform		proj_view_mat(const t_scop_context *ctx)
 	t_transform	view_mat;
 	t_transform	proj_mat;
 
-	view_mat = translation(-4.0f, -3.0f, -8.0f);
-	view_mat = compose_transform(rotation_y(-M_PI_4), view_mat);
+	view_mat = rotation_y(-ctx->cam_horiz_angle);
+	view_mat = compose_transform(rotation_x(-ctx->cam_vert_angle), view_mat);
+	view_mat = compose_transform(translation(0.0f, 0.0f, -ctx->cam_distance),
+									view_mat);
 	proj_mat = compose_transform(viewport_transform(ctx), basic_persp());
 	return (compose_transform(proj_mat, view_mat));
 }
