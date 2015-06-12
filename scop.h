@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/31 17:10:48 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 07:33:16 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 11:27:10 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,26 +17,33 @@
 # include <stdint.h>
 # include <stdbool.h>
 
+# include "engine.h"
+# include "cube.h"
+
 # define POS_ATTR_LOCATION (0)
+
+typedef struct	s_camera
+{
+	GLfloat		vert_angle;
+	GLfloat		horiz_angle;
+	GLfloat		distance;
+}				t_camera;
 
 typedef struct	s_scop_context
 {
-	GLuint		pvm_mat_uniform_id;
 	uint16_t	win_w;
 	uint16_t	win_h;
-	GLfloat		cam_vert_angle;
-	GLfloat		cam_horiz_angle;
-	GLfloat		cam_distance;
-	double		time;
-	GLfloat		spin_angle;
-	bool		spin;
+	t_camera	cam;
+	t_material	dark_faces;
+	t_cube		cube;
 }				t_scop_context;
 
 GLuint			compile_shader(const char *filename, GLenum type);
 GLuint			link_program(const GLint vertex_shader_id,
 								const GLint geom_shader_id,
 								const GLint fragment_shader_id);
+t_material		make_dark_faces_mat(GLuint vertex_shader_id);
 int				setup_gl_objects(t_scop_context *ctx);
-int				draw(const t_scop_context *ctx);
+int				draw_scene(const t_scop_context *ctx);
 
 #endif

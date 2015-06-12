@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/12 07:45:09 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 08:24:39 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 11:30:33 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,15 @@ void	key_callback(GLFWwindow *window, int key,
 	(void)mods;
 	ctx = (t_scop_context *)glfwGetWindowUserPointer(window);
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
-		ctx->spin = !ctx->spin;
+		ctx->cube.spin = !ctx->cube.spin;
 	else if (key == GLFW_KEY_UP && action == GLFW_PRESS)
-		ctx->cam_vert_angle -= 0.2f;
+		ctx->cam.vert_angle -= 0.2f;
 	else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
-		ctx->cam_vert_angle += 0.2f;
+		ctx->cam.vert_angle += 0.2f;
 	else if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
-		ctx->cam_horiz_angle -= 0.2f;
+		ctx->cam.horiz_angle -= 0.2f;
 	else if (key == GLFW_KEY_RIGHT && action == GLFW_PRESS)
-		ctx->cam_horiz_angle += 0.2f;
+		ctx->cam.horiz_angle += 0.2f;
 }
 
 void	scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
@@ -41,5 +41,5 @@ void	scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 
 	(void)xoffset;
 	ctx = (t_scop_context *)glfwGetWindowUserPointer(window);
-	ctx->cam_distance = fmax(ctx->cam_distance - (GLfloat)yoffset, 3.0f);
+	ctx->cam.distance = fmax(ctx->cam.distance - (GLfloat)yoffset, 3.0f);
 }

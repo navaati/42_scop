@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 12:14:00 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 08:27:14 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/12 11:37:28 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,76 +14,26 @@
 #include <GL/glew.h>
 #include <math.h>
 
-#include "geom.h"
 #include "scop.h"
+#include "geom.h"
 
-static const t_point	g_cube[] = {
-	{ 1.0f, 1.0f, 1.0f },
-	{ 1.0f, 1.0f, -1.0f },
-	{ -1.0f, 1.0f, -1.0f },
-	{ -1.0f, 1.0f, 1.0f },
-	{ 1.0f, -1.0f, 1.0f },
-	{ 1.0f, -1.0f, -1.0f },
-	{ -1.0f, -1.0f, -1.0f },
-	{ -1.0f, -1.0f, 1.0f },
-};
-
-static const GLushort	g_cube_ix[] = {
-	0, 1, 2, 2, 3, 0,
-	0, 3, 7, 7, 4, 0,
-	0, 4, 5, 5, 0, 1,
-	1, 5, 6, 6, 1, 2,
-	2, 6, 3, 3, 6, 7,
-	7, 4, 6, 6, 4, 5
-};
-
-static GLuint			create_cube_vao(void)
-{
-	GLuint vao_id;
-	GLuint vbo_id;
-	GLuint ixbo_id;
-
-	glGenVertexArrays(1, &vao_id);
-	glBindVertexArray(vao_id);
-	glGenBuffers(1, &vbo_id);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_cube), g_cube,
-					GL_STATIC_DRAW);
-	glGenBuffers(1, &ixbo_id);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ixbo_id);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(g_cube_ix), g_cube_ix,
-					GL_STATIC_DRAW);
-	glEnableVertexAttribArray(POS_ATTR_LOCATION);
-	glVertexAttribPointer(POS_ATTR_LOCATION, 3, GL_FLOAT,
-							GL_FALSE, 0, (void *)0);
-	return (vao_id);
-}
-
-int						setup_gl_objects(t_scop_context *ctx)
+int					setup_gl_objects(t_scop_context *ctx)
 {
 	GLuint	vertex_shader_id;
-	GLuint	geom_shader_id;
-	GLuint	fragment_shader_id;
-	GLuint	program_id;
 
 	vertex_shader_id = compile_shader("vertex.glsl", GL_VERTEX_SHADER);
-	geom_shader_id = compile_shader("geom.glsl", GL_GEOMETRY_SHADER);
-	fragment_shader_id = compile_shader("fragment.glsl", GL_FRAGMENT_SHADER);
-	program_id = link_program(vertex_shader_id,
-								geom_shader_id,
-								fragment_shader_id);
-	glDeleteShader(vertex_shader_id);
-	glDeleteShader(geom_shader_id);
-	glDeleteShader(fragment_shader_id);
-	create_cube_vao();
-	ctx->pvm_mat_uniform_id = glGetUniformLocation(program_id, "pvm_mat");
-	glUseProgram(program_id);
+	ctx->dark_faces = make_dark_faces_mat(vertex_shader_id);
+	ctx->cube = make_cube();
+	ctx->cube.object.material = &ctx->dark_faces;
+	ctx->cam.vert_angle = -0.4f;
+	ctx->cam.horiz_angle = 0.0f;
+	ctx->cam.distance = 5.0f;
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
 	return (0);
 }
 
-static t_transform		viewport_transform(const t_scop_context *ctx)
+static t_transform	viewport_transform(const t_scop_context *ctx)
 {
 	GLfloat		aspect;
 	t_transform	transform;
@@ -94,30 +44,40 @@ static t_transform		viewport_transform(const t_scop_context *ctx)
 	return (transform);
 }
 
-static t_transform		proj_view_mat(const t_scop_context *ctx)
+static t_transform	proj_view_mat(const t_scop_context *ctx)
 {
 	t_transform	view_mat;
 	t_transform	proj_mat;
 
-	view_mat = rotation_y(-ctx->cam_horiz_angle);
-	view_mat = compose_transform(rotation_x(-ctx->cam_vert_angle), view_mat);
-	view_mat = compose_transform(translation(0.0f, 0.0f, -ctx->cam_distance),
+	view_mat = rotation_y(-ctx->cam.horiz_angle);
+	view_mat = compose_transform(rotation_x(-ctx->cam.vert_angle), view_mat);
+	view_mat = compose_transform(translation(0.0f, 0.0f, -ctx->cam.distance),
 									view_mat);
 	proj_mat = compose_transform(viewport_transform(ctx), basic_persp());
 	return (compose_transform(proj_mat, view_mat));
 }
 
-int						draw(const t_scop_context *ctx)
+static void			draw_object(const t_object *obj, t_transform pv_mat)
 {
-	t_transform	model_mat;
 	t_transform	pvm_mat;
+	GLuint		pvm_mat_uniform_id;
+
+	glBindVertexArray(obj->vao_id);
+	glUseProgram(obj->material->program_id);
+	pvm_mat_uniform_id = glGetUniformLocation(obj->material->program_id,
+												"pvm_mat");
+	pvm_mat = compose_transform(pv_mat, obj->model_mat);
+	glUniformMatrix4fv(pvm_mat_uniform_id, 1, GL_FALSE,
+						to_array(&pvm_mat));
+	obj->draw(obj);
+}
+
+int					draw_scene(const t_scop_context *ctx)
+{
+	t_transform	pv_mat;
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	model_mat = rotation_y(ctx->spin_angle);
-	pvm_mat = compose_transform(proj_view_mat(ctx), model_mat);
-	glUniformMatrix4fv(ctx->pvm_mat_uniform_id, 1, GL_FALSE,
-					to_array(&pvm_mat));
-	glDrawElements(GL_TRIANGLES, sizeof(g_cube_ix) / sizeof(*g_cube_ix),
-					GL_UNSIGNED_SHORT, (void*)0);
+	pv_mat = proj_view_mat(ctx);
+	draw_object(&ctx->cube.object, pv_mat);
 	return (0);
 }
