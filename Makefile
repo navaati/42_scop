@@ -1,8 +1,8 @@
-PKGS = glew glfw3
+PKGS = glew glfw3 gl
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror $(shell pkg-config --cflags $(PKGS))
-LDFLAGS = $(shell pkg-config --libs $(PKGS)) -framework OpenGL -lm
+LDFLAGS = $(shell pkg-config --libs $(PKGS)) -lm
 
 CFLAGS += -g -O0
 
