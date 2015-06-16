@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/12 11:09:25 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 11:15:26 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/15 16:42:24 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ typedef struct	s_object
 	t_transform			model_mat;
 	t_material			*material;
 	void				(*animate)(struct s_object *, double time_diff);
-	void				*private;
 }				t_object;
 
 #endif
