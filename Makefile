@@ -8,7 +8,7 @@ CFLAGS += -g -O0
 
 NAME = scop
 OBJS = scop.o gl.o load_shaders.o cube.o materials.o inputs.o \
-	camera.o geom.o rotation.o homothety.o
+	grid.o grid_mesh.o camera.o geom.o rotation.o homothety.o
 
 all: $(NAME)
 

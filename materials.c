@@ -20,8 +20,9 @@ t_material		make_dark_faces_mat(GLuint vertex_shader_id)
 	GLuint		fragment_shader_id;
 	t_material	dark;
 
-	geom_shader_id = compile_shader("geom.glsl", GL_GEOMETRY_SHADER);
-	fragment_shader_id = compile_shader("fragment.glsl", GL_FRAGMENT_SHADER);
+	geom_shader_id = compile_shader("dark_geom.glsl", GL_GEOMETRY_SHADER);
+	fragment_shader_id = compile_shader("dark_fragment.glsl",
+										GL_FRAGMENT_SHADER);
 	dark.program_id = link_program(vertex_shader_id,
 									geom_shader_id,
 									fragment_shader_id);

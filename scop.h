@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/31 17:10:48 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 11:52:44 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/15 15:44:02 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include "engine.h"
 # include "camera.h"
 # include "cube.h"
+# include "grid.h"
 
 # define POS_ATTR_LOCATION (0)
 
@@ -30,6 +31,7 @@ typedef struct	s_scop_context
 	t_camera	cam;
 	t_material	dark_faces;
 	t_cube		cube;
+	t_grid		grid;
 }				t_scop_context;
 
 GLuint			compile_shader(const char *filename, GLenum type);

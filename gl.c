@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 12:14:00 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/16 11:22:50 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/16 15:57:39 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,13 @@ int					setup_gl_objects(t_scop_context *ctx)
 
 	vertex_shader_id = compile_shader("vertex.glsl", GL_VERTEX_SHADER);
 	init_camera(&ctx->cam);
+	make_grid(&ctx->grid, vertex_shader_id);
 	ctx->dark_faces = make_dark_faces_mat(vertex_shader_id);
 	ctx->cube = make_cube();
 	ctx->cube.object.material = &ctx->dark_faces;
 	glDeleteShader(vertex_shader_id);
 	glEnable(GL_DEPTH_TEST);
-	glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
+	glClearColor(1.0f, 1.0f, 1.0f, 0.0f);
 	return (0);
 }
 
@@ -79,5 +80,6 @@ int					draw_scene(const t_scop_context *ctx)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	pv_mat = proj_view_mat(ctx);
 	draw_object(&ctx->cube.object, pv_mat);
+	draw_object(&ctx->grid.object, pv_mat);
 	return (0);
 }

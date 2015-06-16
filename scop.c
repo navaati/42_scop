@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/05/31 17:10:30 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 12:47:44 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/15 17:52:18 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ static void			animate_scene(t_scop_context *ctx, double *old_time)
 	new_time = glfwGetTime();
 	time_diff = new_time - *old_time;
 	ctx->cube.object.animate(&ctx->cube.object, time_diff);
+	ctx->grid.object.animate(&ctx->grid.object, time_diff);
 	animate_camera(&ctx->cam, time_diff);
 	*old_time = new_time;
 }
