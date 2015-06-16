@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/08 12:14:00 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/12 12:44:44 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/16 11:22:50 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int					setup_gl_objects(t_scop_context *ctx)
 	ctx->dark_faces = make_dark_faces_mat(vertex_shader_id);
 	ctx->cube = make_cube();
 	ctx->cube.object.material = &ctx->dark_faces;
+	glDeleteShader(vertex_shader_id);
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.0f, 0.0f, 0.2f, 0.0f);
 	return (0);
