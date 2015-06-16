@@ -7,7 +7,7 @@ LDFLAGS = $(shell pkg-config --libs $(PKGS)) -framework OpenGL -lm
 CFLAGS += -g -O0
 
 NAME = scop
-OBJS = scop.o gl.o load_shaders.o cube.o materials.o inputs.o \
+OBJS = scop.o engine.o load_shaders.o cube.o materials.o inputs.o \
 	grid.o grid_mesh.o camera.o geom.o rotation.o homothety.o
 
 all: $(NAME)

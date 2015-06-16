@@ -6,7 +6,7 @@
 /*   By: lgillot- <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/06/12 07:45:09 by lgillot-          #+#    #+#             */
-/*   Updated: 2015/06/16 14:46:41 by lgillot-         ###   ########.fr       */
+/*   Updated: 2015/06/16 18:55:52 by lgillot-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,20 +41,22 @@ void		key_callback(GLFWwindow *window, int key,
 				(action == GLFW_PRESS || action == GLFW_REPEAT))
 		ctx->grid.new_size -= ctx->grid.new_size > 1 ? 1 : 0;
 	else if (key == GLFW_KEY_UP)
-		toggle_key(&ctx->cam.turning_up, action);
+		toggle_key(&ctx->engine.camera.turning_up, action);
 	else if (key == GLFW_KEY_DOWN)
-		toggle_key(&ctx->cam.turning_down, action);
+		toggle_key(&ctx->engine.camera.turning_down, action);
 	else if (key == GLFW_KEY_LEFT)
-		toggle_key(&ctx->cam.turning_left, action);
+		toggle_key(&ctx->engine.camera.turning_left, action);
 	else if (key == GLFW_KEY_RIGHT)
-		toggle_key(&ctx->cam.turning_right, action);
+		toggle_key(&ctx->engine.camera.turning_right, action);
 }
 
 void		scroll_callback(GLFWwindow *window, double xoffset, double yoffset)
 {
 	t_scop_context	*ctx;
+	t_camera		*camera;
 
 	(void)xoffset;
 	ctx = (t_scop_context *)glfwGetWindowUserPointer(window);
-	ctx->cam.distance = fmax(ctx->cam.distance - (GLfloat)yoffset, 3.0f);
+	camera = &ctx->engine.camera;
+	camera->distance = fmax(camera->distance - (GLfloat)yoffset, 3.0f);
 }
